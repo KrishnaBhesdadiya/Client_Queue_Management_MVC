@@ -53,11 +53,11 @@ namespace Frontend_Exam.Controllers
             }
             else if (result.user.role.Equals("Receptionist", StringComparison.OrdinalIgnoreCase))
             {
-                return RedirectToAction("AdminIndex", "Home");
+                return RedirectToAction("Index", "Receptionist");
             }
             else if (result.user.role.Equals("Doctor", StringComparison.OrdinalIgnoreCase))
             {
-                return RedirectToAction("AdminIndex", "Home");
+                return RedirectToAction("Index", "Doctor");
             }
             else
             {
