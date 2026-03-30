@@ -8,7 +8,6 @@
         {
             _httpContextAccessor = new HttpContextAccessor();
         }
-
         public static string? Token()
         {
             string? Token = null;

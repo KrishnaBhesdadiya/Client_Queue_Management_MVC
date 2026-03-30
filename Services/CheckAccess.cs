@@ -12,7 +12,6 @@ namespace Frontend_Exam.Services
                 filterContext.Result = new RedirectResult("~/auth/login");
             }
         }
-
         public override void OnResultExecuted(ResultExecutedContext context)
         {
             if (context.HttpContext.Session.GetString("JWTToken") == null)

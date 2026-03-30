@@ -13,7 +13,6 @@ namespace Frontend_Exam.Services
             _httpClient = httpClientFactory.CreateClient();
         }
 
-
         public async Task<LoginResponse?> AuthenticateUserAsync(string email, string password)
         {
             string url = "https://cmsback.sampaarsh.cloud/auth/login";
