@@ -1,0 +1,53 @@
+﻿@using ClinicQueueFrontend.Models
+@model List<QueueModel>
+@{
+	Layout = "_RecLayout";
+}
+<main role="main" class="main p-4">
+	<h3 class="fw-bold mb-4" style="color:#0f6d63">TV display - Queue</h3>
+	<div class="card shadow-sm border-0 mb-3" style="max-width: 800px; border-radius: 8px;">
+		<div class="card-body ">
+			<div class="card border-0 shadow-sm p-2">
+				<div class="d-flex align-items-center gap-2">
+					<label class="small fw-bold text-muted">Date</label>
+					<input type="date" class="form-control form-control-sm border-0 bg-white"
+						   value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+				</div>
+			</div>
+            @* <div class="card border-0 shadow-lg rounded-4 p-4"> *@
+                <div class="card-body">
+                    @if (Model != null && Model.Any(x => x.status == "in-progress" || x.status == "waiting"))
+                    {
+                        <div class="row g-4">
+                            @foreach (var item in Model.Where(x => x.status == "in-progress").OrderBy(x => x.tokenNumber))
+                            {
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center gap-4 p-3 rounded-3" style="background-color: #f8fdfc;">
+                                        <div class="rounded-3 d-flex align-items-center justify-content-center fw-bold text-white shadow-sm"
+                                             style="width: 60px; height: 60px; background-color: #0f6d63; font-size: 1.5rem;">
+                                            @item.tokenNumber
+                                        </div>
+
+                                        <div class="text-capitalize fs-2 fw-semibold text-dark">
+                                            @item.appointment.queueEntry.appointment.patient.name
+                                        </div>
+
+                                        <div class="ms-auto">
+                                            <span class="badge rounded-pill bg-success px-3 py-2">NOW CALLING</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <h3>No active patients in queue</h3>
+                        </div>
+                    }
+                </div>
+            @* </div> *@
+		</div>
+	</div>
+</main>

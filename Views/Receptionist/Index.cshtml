@@ -1,6 +1,103 @@
-﻿@{
+﻿@using ClinicQueueFrontend.Models
+@model List<QueueModel>
+@{
 	Layout = "_RecLayout";
 }
 <main role="main" class="main p-4">
 	<h3 class="fw-bold mb-4" style="color:#0f6d63">Queue (manage)</h3>
+    <div class="card shadow">
+        <div class="card-body">
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row-@item.id">
+                            <td>@item.tokenNumber</td>
+                            <td class="status-cell">
+                                @if (@item.status == "waiting")
+                                {
+                                    <span class="badge bg-warning-light text-danger">@item.status</span>
+                                }
+                                else if (@item.status == "in_progress")
+                                {
+                                    <span class="badge bg-primary-light text-dark">@item.status</span>
+                                }
+                                else
+                                {
+
+                                    <span class="badge bg-success-light text-dark">@item.status</span>
+                                }
+                            </td>
+                            <td class="action-cell">
+                                @if (item.status == "waiting") // Initial State
+                                {
+                                    <a class="btn btn-sm btn-info" asp-action="StatusUpdate" asp-route-id="@item.id" onclick="updateStatus(@item.id, 'In Progress')">InProgress</a>
+                                    <a class="btn btn-sm btn-secondary" asp-action="StatusSkip" asp-route-id="@item.id" onclick="updateStatus(@item.id, 'Skipped')">Skip</a>
+                                }
+                                else if (item.status == "in_progress")
+                                {
+                                    <a class="btn btn-sm btn-success" asp-action="StatusDone" asp-route-id="@item.id" onclick="updateStatus(@item.id, 'Done')">Done</a>
+                                }
+                                @* If Status is "Done", this cell remains empty *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
 </main>
+@* <script>
+        async function updateStatus(taskId, newStatus) {
+        try {
+            // 1. Wrap the status in an object so the API can parse it
+            const payload = { status: newStatus };
+
+            const response = await fetch(`https://cmsback.sampaarsh.cloud/reports/${taskId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                const row = document.getElementById(`row-${taskId}`);
+                const statusCell = row.querySelector('.status-cell');
+                const actionCell = row.querySelector('.action-cell');
+
+                // 2. Update Status with the correct badge styling
+                if (newStatus === "In Progress") {
+                    statusCell.innerHTML = `<span class="badge bg-primary-light">in_progress</span>`;
+                    actionCell.innerHTML = `
+                        <button class="btn btn-sm btn-success" onclick="updateStatus(${taskId}, 'Done')">
+                            Done
+                        </button>`;
+                }
+                else if (newStatus === "Done") {
+                    statusCell.innerHTML = `<span class="badge bg-success-light text-dark">done</span>`;
+                    actionCell.innerHTML = "";
+                }
+                else if (newStatus === "Skipped") {
+                    statusCell.innerHTML = `<span class="badge bg-secondary text-white">skipped</span>`;
+                    actionCell.innerHTML = "";
+                }
+            } else {
+                const errorText = await response.text();
+                console.error("Server returned an error:", errorText);
+                alert("Failed to update status. Please try again.");
+            }
+        } catch (error) {
+            console.error("Network error updating status:", error);
+        }
+    }
+</script> *@
